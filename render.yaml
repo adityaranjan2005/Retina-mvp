@@ -2,7 +2,7 @@ services:
   - type: web
     name: retinal-vessel-analysis
     env: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && python download_model.py
     startCommand: gunicorn app:app --timeout 120 --workers 2 --bind 0.0.0.0:$PORT
     envVars:
       - key: FLASK_ENV
@@ -10,8 +10,10 @@ services:
       - key: CLOUDINARY_CLOUD_NAME
         value: dhonhnyuq
       - key: CLOUDINARY_API_KEY
-        value: 843784586562915
+        value: "843784586562915"
       - key: CLOUDINARY_API_SECRET
         value: U0aPHRuc_dNnXG-v_68od6ra1PE
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: MODEL_URL
+        value: YOUR_MODEL_URL_HERE
