@@ -8,12 +8,18 @@ import base64
 from io import BytesIO
 from pathlib import Path
 import requests
+import gc
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from PIL import Image
 import numpy as np
 import torch
 from huggingface_hub import hf_hub_download
+
+# Memory optimization for free tier
+torch.set_num_threads(1)
+if hasattr(torch, 'set_float32_matmul_precision'):
+    torch.set_float32_matmul_precision('high')
 
 from src.model import MultiHeadRetinaModel
 from src.metrics import compute_skeleton_metrics, postprocess_vessel_mask, extract_centerline_from_vessel
@@ -61,10 +67,11 @@ def load_model_once():
     # Download or locate model
     checkpoint_path = download_model_from_hf()
     
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = 'cpu'  # Force CPU for free tier memory constraints
     print(f"🔧 Loading model on device: {device}")
     
-    checkpoint = torch.load(checkpoint_path, map_location=device)
+    # Load with memory optimization
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
     
     model = MultiHeadRetinaModel(
         encoder_name="resnet34",
@@ -74,7 +81,11 @@ def load_model_once():
     model = model.to(device)
     model.eval()
     
-    img_size = checkpoint.get('img_size', 512)
+    # Free checkpoint memory
+    del checkpoint
+    gc.collect()
+    
+    img_size = 512  # Fixed size to avoid checkpoint dependency
     print(f"✅ Model loaded successfully (img_size={img_size}, device={device})")
 
 def get_inference_transform(img_size: int) -> A.Compose:
