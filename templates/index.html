@@ -632,7 +632,7 @@
             try {
                 const formData = new FormData();
                 formData.append('image', selectedFile);
-                formData.append('use_cloudinary', 'false');
+                formData.append('use_cloudinary', 'true');
 
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
