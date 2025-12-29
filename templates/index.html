@@ -243,7 +243,6 @@
             padding: 40px;
             background: #fafafa;
             border: 1px solid #e0e0e0;
-            text-align: center;
         }
 
         .preview-section h3 {
@@ -251,13 +250,14 @@
             font-weight: 600;
             margin-bottom: 20px;
             letter-spacing: 0.3px;
+            text-align: center;
         }
 
         .preview-section img {
-            max-width: 600px;
+            max-width: 100%;
             max-height: 400px;
-            display: inline-block;
-            border: 1px solid #e0e0e0;
+            display: block;
+            margin: 0 auto;
         }
 
         .error {
@@ -304,120 +304,12 @@
             background: #000000;
         }
 
-        .methodology-section {
-            margin-top: 50px;
-            padding-top: 40px;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .methodology-section h2 {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 25px;
-            letter-spacing: -0.3px;
-        }
-
-        .method-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 35px;
-        }
-
-        .method-card {
-            background: #fafafa;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .method-card h4 {
-            font-size: 0.75em;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        .method-card p {
-            font-size: 0.8em;
-            line-height: 1.6;
-            color: #333333;
-            font-weight: 300;
-        }
-
-        .method-card strong {
-            font-weight: 500;
-            color: #000000;
-        }
-
-        .acknowledgments {
-            background: #000000;
-            color: #ffffff;
-            padding: 25px;
-            margin: 35px 0;
-        }
-
-        .acknowledgments h3 {
-            font-size: 0.95em;
-            font-weight: 600;
-            margin-bottom: 18px;
-            letter-spacing: -0.3px;
-        }
-
-        .ack-content {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
-        }
-
-        .ack-item p {
-            font-size: 0.8em;
-            line-height: 1.6;
-            margin-bottom: 8px;
-            color: #cccccc;
-        }
-
-        .ack-item p strong {
-            color: #ffffff;
-            font-weight: 600;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        .disclaimer {
-            background: #fafafa;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-left: 4px solid #000000;
-        }
-
-        .disclaimer h4 {
-            font-size: 0.75em;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .disclaimer p {
-            font-size: 0.8em;
-            line-height: 1.6;
-            color: #666666;
-            font-weight: 300;
-        }
-
         @media (max-width: 1200px) {
             .results-grid {
                 grid-template-columns: 1fr;
             }
             .metrics-grid {
                 grid-template-columns: repeat(2, 1fr);
-            }
-            .method-grid {
-                grid-template-columns: 1fr;
-            }
-            .ack-content {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -515,55 +407,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Methodology Section -->
-                <div class="methodology-section">
-                    <h2>METHODOLOGY & TECHNICAL OVERVIEW</h2>
-                    
-                    <div class="method-grid">
-                        <div class="method-card">
-                            <h4>PRINCIPLES</h4>
-                            <p>This system employs deep learning-based semantic segmentation using a multi-head U-Net architecture with ResNet34 encoder. The model performs pixel-wise classification to identify retinal blood vessels, extract centerline skeletons, and classify arteries versus veins from fundus photography.</p>
-                        </div>
-
-                        <div class="method-card">
-                            <h4>PROCEDURE</h4>
-                            <p><strong>1. Preprocessing:</strong> Input images are normalized using ImageNet statistics and resized to 256×256 pixels.<br>
-                            <strong>2. Segmentation:</strong> Three parallel heads predict vessel masks, centerline structures, and A/V classifications.<br>
-                            <strong>3. Post-processing:</strong> Morphological closing bridges small gaps, and skeletonization extracts vessel centerlines.<br>
-                            <strong>4. Quantification:</strong> Graph-based analysis computes metrics including branch points, endpoints, and tortuosity indices.</p>
-                        </div>
-
-                        <div class="method-card">
-                            <h4>THEORETICAL BASIS</h4>
-                            <p>The architecture combines encoder-decoder networks for semantic segmentation with loss functions optimized for medical imaging: Binary Cross-Entropy with Logits (BCE) and Dice coefficient for vessel/centerline heads, Cross-Entropy for multi-class A/V classification. Centerline tortuosity is computed as the ratio of actual path length to Euclidean distance between endpoints, providing a proxy for vessel curvature and potential pathological indicators.</p>
-                        </div>
-
-                        <div class="method-card">
-                            <h4>CLINICAL RELEVANCE</h4>
-                            <p>Retinal vessel analysis provides non-invasive biomarkers for systemic diseases including diabetic retinopathy, hypertension, and cardiovascular conditions. Quantitative metrics such as vessel tortuosity, branching patterns, and artery-to-vein ratios correlate with disease severity and progression, enabling early detection and monitoring of microvascular complications.</p>
-                        </div>
-                    </div>
-
-                    <div class="acknowledgments">
-                        <h3>ACKNOWLEDGMENTS</h3>
-                        <div class="ack-content">
-                            <div class="ack-item">
-                                <p><strong>Dataset Sources:</strong></p>
-                                <p>Training data courtesy of publicly available retinal imaging datasets from Kaggle and Clemson University. These datasets include fundus photographs with expert-annotated ground truth segmentations, enabling supervised learning approaches for vessel detection and classification.</p>
-                            </div>
-                            <div class="ack-item">
-                                <p><strong>Developer:</strong></p>
-                                <p><strong>Aditya Ranjan</strong><br>Entrepreneur and Social Worker<br>Dedicating his free time to medical welfare initiatives and developing accessible healthcare technology for underserved communities, advancing health equity through AI-powered diagnostic solutions.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="disclaimer">
-                        <h4>MEDICAL DISCLAIMER</h4>
-                        <p>This tool is designed for research and educational purposes only. It is not intended for clinical diagnosis or treatment decisions. All medical interpretations should be performed by qualified healthcare professionals. The automated analysis provided by this system should be used as a supplementary tool and not as a replacement for expert clinical judgment.</p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -632,7 +475,7 @@
             try {
                 const formData = new FormData();
                 formData.append('image', selectedFile);
-                formData.append('use_cloudinary', 'true');
+                formData.append('use_cloudinary', 'false');
 
                 const response = await fetch('/api/analyze', {
                     method: 'POST',

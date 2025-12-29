@@ -6,42 +6,40 @@ __pycache__/
 .Python
 env/
 venv/
-.venv/
 ENV/
+.venv
 
-# Flask
-instance/
-.webassets-cache
+# Jupyter
+.ipynb_checkpoints
 
-# Environment
+# Model outputs
+outputs/
+*.pt
+*.pth
+
+# Data (large files)
+data/images/*.ppm
+data/vessel_masks/*.ppm
+data/av_masks/*.ppm
+
+# Hugging Face cache
+models--*
+
+# Sensitive
+upload_simple.py
+*.env
 .env
-.env.local
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Data (if you don't want to deploy training data)
-data/images/*
-data/vessel_masks/*
-data/av_masks/*
-
-# Model checkpoints and outputs (too large for GitHub)
-outputs/*.pt
-outputs/*.pth
-outputs/*.png
-outputs/*.json
-
 # Logs
 *.log
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
