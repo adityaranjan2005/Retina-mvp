@@ -16,4 +16,4 @@ services:
       - key: PYTHON_VERSION
         value: 3.11.0
       - key: MODEL_URL
-        value: YOUR_MODEL_URL_HERE
+        value: https://drive.google.com/uc?export=download&id=1duPZGU7qhfiNTe0ZYm2O430v3A1ItEKF

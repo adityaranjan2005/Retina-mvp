@@ -3,11 +3,29 @@
 ## Problem
 The trained model file (`outputs/mvp_model.pt`) is **839.79 MB**, which exceeds GitHub's 100 MB file size limit.
 
-## Solutions
+## Solution: Use Cloudinary (Recommended)
 
-### Option 1: Upload to Cloud Storage (Recommended)
+You already have Cloudinary configured! Just upload your model:
 
-Upload your model to a cloud storage service and set the download URL:
+### Quick Upload
+
+Run the upload script:
+
+```bash
+python upload_model_to_cloudinary.py
+```
+
+This will:
+1. Upload `outputs/mvp_model.pt` to your Cloudinary account
+2. Display the secure URL
+3. Show you the exact MODEL_URL to use in Render
+
+The URL will look like:
+```
+https://res.cloudinary.com/dhonhnyuq/raw/upload/v1234567890/retina-mvp/mvp_model.pt
+```
+
+### Alternative Cloud Storage Options
 
 #### A. Google Drive
 1. Upload `outputs/mvp_model.pt` to Google Drive
@@ -20,13 +38,6 @@ Upload your model to a cloud storage service and set the download URL:
 2. Get sharing link
 3. Replace `www.dropbox.com` with `dl.dropboxusercontent.com` in the URL
 4. Remove `?dl=0` from the end
-
-#### C. Cloudinary (Your Account)
-```bash
-# Upload using Cloudinary CLI
-cloudinary upload outputs/mvp_model.pt --resource_type raw
-```
-Then get the secure URL from Cloudinary dashboard.
 
 #### D. AWS S3 / Azure Blob Storage
 Upload the file and generate a public URL or use pre-signed URLs.
@@ -68,46 +79,36 @@ The repository is configured to:
 
 ## Deployment Steps
 
-### 1. Remove Model from Git History
+### 1. Upload Model to Cloudinary ✅ (Easiest)
 
 ```bash
-# Remove the model from git cache (keep local file)
-git rm --cached outputs/mvp_model.pt
-git rm --cached outputs/*.png outputs/*.json
-
-# Commit the removal
-git add .gitignore
-git commit -m "Remove large model file from git"
-
-# Push to GitHub
-git push origin master
+python upload_model_to_cloudinary.py
 ```
 
-### 2. Upload Model to Cloud Storage
+Copy the displayed URL (starts with `https://res.cloudinary.com/...`)
 
-Choose one of the cloud storage options above and upload your model file.
+### 2. Push to GitHub ✅ (Already Done)
 
-### 3. Configure Render Deployment
+Your code is already on GitHub without the large model file.
 
-In Render dashboard, set the `MODEL_URL` environment variable:
+### 3. Deploy on Render
 
-```
-MODEL_URL=https://your-storage-url/mvp_model.pt
-```
+1. Go to [render.com](https://render.com) and sign in with GitHub
+2. Click "New +" → "Web Service"
+3. Connect your repository: `adityaranjan2005/Retina-mvp`
+4. Render will auto-detect settings from `render.yaml`
+5. **Important:** Add environment variable:
+   - Key: `MODEL_URL`
+   - Value: (paste the Cloudinary URL from step 1)
+6. Click "Create Web Service"
 
-Or update `render.yaml`:
+### 4. Verify Deployment
 
-```yaml
-- key: MODEL_URL
-  value: https://your-storage-url/mvp_model.pt
-```
+Check Render logs for:
+- ✅ `Model downloaded successfully`
+- ✅ `Model loaded at startup`
 
-### 4. Deploy
-
-Push to GitHub and Render will:
-1. Install dependencies
-2. Run `download_model.py` to fetch the model
-3. Start the Flask app
+Your app will be live at: `https://retinal-vessel-analysis.onrender.com`
 
 ## Verification
 
