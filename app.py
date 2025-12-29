@@ -33,12 +33,29 @@ img_size = 256
 device = 'cpu'
 
 def load_model_once():
-    """Load model once at startup."""
+    """Load model once at startup. Download if not exists."""
     global model, img_size, device
     
     checkpoint_path = "outputs/mvp_model.pt"
+    
+    # Download model if it doesn't exist
     if not os.path.exists(checkpoint_path):
-        raise FileNotFoundError(f"Model checkpoint not found at {checkpoint_path}")
+        print(f"⚠️  Model not found at {checkpoint_path}")
+        print("📥 Downloading model from cloud storage...")
+        try:
+            # Import and run download script
+            import sys
+            sys.path.insert(0, os.path.dirname(__file__))
+            from download_model import download_model
+            
+            if not download_model():
+                raise FileNotFoundError("Model download failed")
+            
+            if not os.path.exists(checkpoint_path):
+                raise FileNotFoundError(f"Model file still not found after download at {checkpoint_path}")
+        except Exception as e:
+            print(f"❌ Failed to download model: {e}")
+            raise
     
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     print(f"Loading model from {checkpoint_path} on {device}...")
