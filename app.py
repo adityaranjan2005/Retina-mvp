@@ -41,6 +41,7 @@ def load_model_once():
         raise FileNotFoundError(f"Model checkpoint not found at {checkpoint_path}")
     
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(f"Loading model from {checkpoint_path} on {device}...")
     checkpoint = torch.load(checkpoint_path, map_location=device)
     
     model = MultiHeadRetinaModel(
@@ -52,7 +53,18 @@ def load_model_once():
     model.eval()
     
     img_size = checkpoint.get('img_size', 256)
-    print(f"Model loaded successfully (img_size={img_size}, device={device})")
+    print(f"✅ Model loaded successfully (img_size={img_size}, device={device})")
+
+# Load model when gunicorn starts (not just in __main__)
+print("=" * 60)
+print("Initializing application...")
+try:
+    load_model_once()
+except Exception as e:
+    print(f"❌ Failed to load model: {e}")
+    import traceback
+    traceback.print_exc()
+print("=" * 60)
 
 def get_inference_transform(img_size: int) -> A.Compose:
     """Get inference transform."""
@@ -151,6 +163,10 @@ def index():
 def analyze():
     """Analyze uploaded image."""
     try:
+        # Check if model is loaded
+        if model is None:
+            return jsonify({'error': 'Model not loaded. Please check server logs.'}), 500
+        
         # Check if image was uploaded
         if 'image' not in request.files:
             return jsonify({'error': 'No image uploaded'}), 400
@@ -225,7 +241,13 @@ def health():
 if __name__ == '__main__':
     # Load model at startup
     print("Loading model...")
-    load_model_once()
+    try:
+        load_model_once()
+        print("✅ Model loaded successfully")
+    except Exception as e:
+        print(f"❌ Failed to load model: {e}")
+        import traceback
+        traceback.print_exc()
     print("Starting Flask server...")
     
     # Get port from environment (for cloud platforms) or default to 5000
