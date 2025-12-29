@@ -227,7 +227,10 @@ def analyze():
         return jsonify(response)
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print(f"❌ Error in /api/analyze: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e), 'success': False}), 500
 
 @app.route('/health')
 def health():
