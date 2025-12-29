@@ -55,6 +55,7 @@ def download_model():
     # Create outputs directory if it doesn't exist
     output_dir = Path("outputs")
     output_dir.mkdir(exist_ok=True)
+    print(f"✅ Created outputs directory: {output_dir.absolute()}")
     
     model_path = output_dir / "mvp_model.pt"
     
@@ -65,6 +66,7 @@ def download_model():
         return True
     
     print(f"📥 Downloading model from: {model_url}")
+    print(f"📥 Target location: {model_path.absolute()}")
     
     try:
         # Check if it's a Google Drive URL
