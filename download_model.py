@@ -8,18 +8,35 @@ from pathlib import Path
 
 def download_file_from_google_drive(file_id, destination):
     """Download large file from Google Drive with proper handling."""
-    URL = "https://docs.google.com/uc?export=download&confirm=1"
+    # Use multiple approaches for Google Drive
+    urls_to_try = [
+        f"https://drive.google.com/uc?export=download&id={file_id}&confirm=t",
+        f"https://drive.usercontent.google.com/download?id={file_id}&export=download&confirm=t",
+        f"https://docs.google.com/uc?export=download&id={file_id}"
+    ]
     
     session = requests.Session()
     
-    response = session.get(URL, params={'id': file_id}, stream=True)
-    token = get_confirm_token(response)
+    for idx, url in enumerate(urls_to_try, 1):
+        try:
+            print(f"   Trying URL format {idx}/{len(urls_to_try)}...")
+            response = session.get(url, stream=True, timeout=30)
+            
+            # Check if we got actual file content (not an HTML error page)
+            content_type = response.headers.get('content-type', '')
+            if 'text/html' in content_type:
+                print(f"   Got HTML response (likely error page), trying next URL...")
+                continue
+                
+            if response.status_code == 200:
+                print(f"   ✅ Successfully connected, downloading...")
+                save_response_content(response, destination)
+                return True
+        except Exception as e:
+            print(f"   ❌ Attempt {idx} failed: {e}")
+            continue
     
-    if token:
-        params = {'id': file_id, 'confirm': token}
-        response = session.get(URL, params=params, stream=True)
-    
-    save_response_content(response, destination)
+    raise Exception("All Google Drive download methods failed")
 
 def get_confirm_token(response):
     """Extract confirmation token from Google Drive response."""
@@ -33,13 +50,18 @@ def save_response_content(response, destination):
     CHUNK_SIZE = 32768
     total_size = 0
     
-    with open(destination, "wb") as f:
-        for chunk in response.iter_content(CHUNK_SIZE):
-            if chunk:
-                f.write(chunk)
-                total_size += len(chunk)
-                print(f"   Downloaded: {total_size / 1024 / 1024:.1f} MB", end='\r')
-    print()
+    try:
+        with open(destination, "wb") as f:
+            for chunk in response.iter_content(CHUNK_SIZE):
+                if chunk:
+                    f.write(chunk)
+                    total_size += len(chunk)
+                    print(f"   Downloaded: {total_size / 1024 / 1024:.1f} MB", end='\r')
+        print()
+        print(f"   Total downloaded: {total_size / 1024 / 1024:.1f} MB")
+    except Exception as e:
+        print(f"\n   ❌ Error while saving: {e}")
+        raise
 
 def download_model():
     """Download model from cloud storage URL."""

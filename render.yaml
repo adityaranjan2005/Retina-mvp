@@ -2,7 +2,7 @@ services:
   - type: web
     name: retinal-vessel-analysis
     env: python
-    buildCommand: pip install -r requirements.txt && python download_model.py || echo "Model download failed but continuing..."
+    buildCommand: pip install -r requirements.txt && python download_model.py
     startCommand: gunicorn app:app --timeout 120 --workers 2 --bind 0.0.0.0:$PORT
     envVars:
       - key: FLASK_ENV
