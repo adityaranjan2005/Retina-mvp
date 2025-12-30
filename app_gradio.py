@@ -326,14 +326,13 @@ with gr.Blocks(title="Retinal Vessel Analysis", theme=gr.themes.Monochrome()) as
     ## 👨‍💻 About the Developer
     
     **Aditya Ranjan**
-    - **Entrepreneur & Social Worker**
-    - **Medical AI Researcher** (free time dedication)
-    - **Mission**: Making advanced medical technology accessible to everyone
-    - **Vision**: Improving lives through AI-powered healthcare solutions
+    - Entrepreneur & Social Worker
+    - Medical AI Researcher (free time dedication)
+    - *"Spending free time in medical research to make life better for all."*
     
-    *"Spending free time in medical research to make life better for all."*
-    
-    ### Contact & Collaboration
+    ### Connect with Aditya
+    - **X (Twitter)**: [@em_Adii](https://x.com/em_Adii)
+    - **LinkedIn**: [linkedin.com/in/adityaranjan2005](https://linkedin.com/in/adityaranjan2005)
     - **GitHub**: [@adityaranjan2005](https://github.com/adityaranjan2005)
     - **Hugging Face**: [@adityaranjan2005](https://huggingface.co/adityaranjan2005)
     
