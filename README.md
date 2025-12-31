@@ -2,6 +2,9 @@
 
 A PyTorch-based MVP pipeline for retinal vessel segmentation and analysis with multi-head architecture supporting vessel segmentation, centerline extraction, and artery/vein classification.
 
+**🚀 Live Demo**: The model is now live on Hugging Face! Try it here: https://huggingface.co/spaces/adityaranjan2005/retinal-vessel-analysis  
+*(Note: The demo might be a bit slow, please be patient. You may need to scroll down to see the interface)*
+
 ## Features
 
 - **Multi-head segmentation model** with three outputs:
